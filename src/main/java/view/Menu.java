@@ -6,7 +6,7 @@ public class Menu {
 
 	Scanner teclado = new Scanner(System.in);
 
-	// teste
+	// teste alterado localmente
 	private static final int OPCAO_MENU_CADASTRO = 1;
 	private static final int OPCAO_MENU_RELATORIO = 2;
 	private static final int OPCAO_MENU_SAIR = 3;
