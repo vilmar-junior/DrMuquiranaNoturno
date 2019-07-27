@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Menu {
 	// alteração local
+	// alteração no github novamente
 	Scanner teclado = new Scanner(System.in);
 
 	// teste alterado localmente
