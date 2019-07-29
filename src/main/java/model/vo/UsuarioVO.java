@@ -1,14 +1,20 @@
 package model.vo;
 
+/**
+ * Classe que entidade para a tabela Usuario.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class UsuarioVO {
-	
+
 	private int idUsuario;
 	private String nome;
 	private String cpf;
 	private String telefone;
 	private String login;
 	private String senha;
-	
+
 	public UsuarioVO(int idUsuario, String nome, String cpf, String telefone, String login, String senha) {
 		super();
 		this.idUsuario = idUsuario;
@@ -72,11 +78,8 @@ public class UsuarioVO {
 	}
 
 	public void imprimir() {
-		System.out.printf("%3d   %-40s   %-15s   %-15s \n", 
-		this.getIdUsuario(), 
-		this.getNome(), 
-		this.getCpf(),
-		this.getTelefone()); 
+		System.out.printf("%3d   %-40s   %-15s   %-15s \n", this.getIdUsuario(), this.getNome(), this.getCpf(),
+				this.getTelefone());
 	}
-	
+
 }

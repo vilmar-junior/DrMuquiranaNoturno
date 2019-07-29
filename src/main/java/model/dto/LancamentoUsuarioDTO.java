@@ -4,17 +4,24 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Classe que contém um DTO (Data Transfer Object) responsável por encapsular
+ * dados necessários nos relatórios.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class LancamentoUsuarioDTO {
-	
+
 	DecimalFormat df = new DecimalFormat("0.00");
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	
+
 	private int idUsuario;
 	private String nome;
 	private double valor;
 	private LocalDate dataInicioPesquisa;
 	private LocalDate dataFimPesquisa;
-	
+
 	public LancamentoUsuarioDTO(int idUsuario, String nome, double valor, LocalDate dataInicioPesquisa,
 			LocalDate dataFimPesquisa) {
 		super();
@@ -70,11 +77,8 @@ public class LancamentoUsuarioDTO {
 	}
 
 	public void imprimir() {
-		System.out.printf("%3d   %-40s   %10s  \n",
-				this.getIdUsuario(),
-				this.getNome(),
-				df.format(this.getValor()));
-		
+		System.out.printf("%3d   %-40s   %10s  \n", this.getIdUsuario(), this.getNome(), df.format(this.getValor()));
+
 	}
-	
+
 }

@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import model.bo.DespesaBO;
 import model.vo.DespesaVO;
 
+/**
+ * Classe que controla as chamadas relacionadas a despesas.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class ControladoraDespesa {
 
 	public void cadastrarDespesaController(DespesaVO despesaVO) {
@@ -31,5 +37,4 @@ public class ControladoraDespesa {
 		DespesaBO despesaBO = new DespesaBO();
 		return despesaBO.consultarDespesaBO(despesaVO);
 	}
-
 }

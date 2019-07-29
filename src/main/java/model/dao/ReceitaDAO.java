@@ -9,23 +9,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import model.vo.ReceitaVO;
-import model.vo.UsuarioVO;
 
+/**
+ * Classe que contém as chamadas SQL para a entidade/tabela Receita.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class ReceitaDAO {
-	
+
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	
+
 	public boolean existeRegistroReceita(ReceitaVO receitaVO) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
-		String query = "SELECT descricao, valor, dataReceita FROM receita "
-				+ " WHERE descricao = '" + receitaVO.getDescricao() + "' " 
-				+ " AND valor = " + receitaVO.getValor() + " " 
+		String query = "SELECT descricao, valor, dataReceita FROM receita " + " WHERE descricao = '"
+				+ receitaVO.getDescricao() + "' " + " AND valor = " + receitaVO.getValor() + " "
 				+ " AND dataReceita = '" + receitaVO.getDataReceita() + "' ";
 		try {
 			resultado = stmt.executeQuery(query);
-			if (resultado.next()){
+			if (resultado.next()) {
 				return true;
 			}
 		} catch (SQLException e) {
@@ -44,11 +48,9 @@ public class ReceitaDAO {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
-		String query = "INSERT INTO receita (idUsuario, descricao, valor, dataReceita) VALUES (" 
-		+ receitaVO.getIdUsuario() + ", '" 
-		+ receitaVO.getDescricao() + "', "
-		+ receitaVO.getValor() + ", '"
-		+ receitaVO.getDataReceita() + "' )";
+		String query = "INSERT INTO receita (idUsuario, descricao, valor, dataReceita) VALUES ("
+				+ receitaVO.getIdUsuario() + ", '" + receitaVO.getDescricao() + "', " + receitaVO.getValor() + ", '"
+				+ receitaVO.getDataReceita() + "' )";
 		try {
 			resultado = stmt.executeUpdate(query);
 		} catch (SQLException e) {
@@ -68,7 +70,7 @@ public class ReceitaDAO {
 		String query = "SELECT idreceita FROM receita WHERE idreceita = " + id;
 		try {
 			resultado = stmt.executeQuery(query);
-			if (resultado.next()){
+			if (resultado.next()) {
 				return true;
 			}
 		} catch (SQLException e) {
@@ -88,9 +90,9 @@ public class ReceitaDAO {
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
 		String query = "DELETE FROM receita WHERE idreceita = " + receitaVO.getId();
-		try{
+		try {
 			resultado = stmt.executeUpdate(query);
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			System.out.println("Erro ao executar a Query de Exclusão da Receita.");
 			System.out.println("Erro: " + e.getMessage());
 		} finally {
@@ -104,11 +106,9 @@ public class ReceitaDAO {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
-		String query = "UPDATE receita SET idusuario = " + receitaVO.getIdUsuario()
-					+ ", descricao = '" + receitaVO.getDescricao() 
-					+ "', valor = " + receitaVO.getValor() 
-					+ ", datareceita = '" + receitaVO.getDataReceita() 
-					+ "' WHERE idreceita = " + receitaVO.getId();
+		String query = "UPDATE receita SET idusuario = " + receitaVO.getIdUsuario() + ", descricao = '"
+				+ receitaVO.getDescricao() + "', valor = " + receitaVO.getValor() + ", datareceita = '"
+				+ receitaVO.getDataReceita() + "' WHERE idreceita = " + receitaVO.getId();
 		try {
 			resultado = stmt.executeUpdate(query);
 		} catch (SQLException e) {
@@ -127,9 +127,9 @@ public class ReceitaDAO {
 		ResultSet resultado = null;
 		ArrayList<ReceitaVO> receitasVO = new ArrayList<ReceitaVO>();
 		String query = "SELECT idreceita, idusuario, descricao, valor, datareceita FROM receita";
-		try{
+		try {
 			resultado = stmt.executeQuery(query);
-			while(resultado.next()){
+			while (resultado.next()) {
 				ReceitaVO receitaVO = new ReceitaVO();
 				receitaVO.setId(Integer.parseInt(resultado.getString(1)));
 				receitaVO.setIdUsuario(Integer.parseInt(resultado.getString(2)));
@@ -138,7 +138,7 @@ public class ReceitaDAO {
 				receitaVO.setDataReceita(LocalDate.parse(resultado.getString(5), dataFormatter));
 				receitasVO.add(receitaVO);
 			}
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			System.out.println("Erro ao executar a Query de Consulta de Receitas.");
 			System.out.println("Erro: " + e.getMessage());
 		} finally {
@@ -154,20 +154,20 @@ public class ReceitaDAO {
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
 		ReceitaVO receita = new ReceitaVO();
-		
-		String query = "SELECT idreceita, idusuario, descricao, valor, datareceita FROM receita WHERE idreceita = " 
+
+		String query = "SELECT idreceita, idusuario, descricao, valor, datareceita FROM receita WHERE idreceita = "
 				+ receitaVO.getId();
-		
-		try{
+
+		try {
 			resultado = stmt.executeQuery(query);
-			while(resultado.next()){
+			while (resultado.next()) {
 				receita.setId(Integer.parseInt(resultado.getString(1)));
 				receita.setIdUsuario(Integer.parseInt(resultado.getString(2)));
 				receita.setDescricao(resultado.getString(3));
 				receita.setValor(Double.parseDouble(resultado.getString(4)));
 				receita.setDataReceita(LocalDate.parse(resultado.getString(5), dataFormatter));
 			}
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			System.out.println("Erro ao executar a Query de Consulta de Receita.");
 			System.out.println("Erro: " + e.getMessage());
 		} finally {

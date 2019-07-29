@@ -1,12 +1,18 @@
 package model.vo;
 
+/**
+ * Classe que entidade para a tabela Lancamento.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public abstract class LancamentoVO {
-	
+
 	private int id;
 	private int idUsuario;
 	private String descricao;
 	private double valor;
-	
+
 	public LancamentoVO(int id, int idUsuario, String descricao, double valor) {
 		super();
 		this.id = id;
@@ -50,5 +56,5 @@ public abstract class LancamentoVO {
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
-	
+
 }

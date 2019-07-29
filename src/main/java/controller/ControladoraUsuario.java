@@ -1,9 +1,16 @@
 package controller;
 
 import java.util.ArrayList;
+
 import model.bo.UsuarioBO;
 import model.vo.UsuarioVO;
 
+/**
+ * Classe que controla as chamadas relacionadas a usuários.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class ControladoraUsuario {
 
 	public void cadastrarUsuarioController(UsuarioVO usuarioVO) {
@@ -31,5 +38,4 @@ public class ControladoraUsuario {
 		return usuarioBO.consultarUsuarioBO(usuarioVO);
 	}
 
-	
 }

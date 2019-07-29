@@ -8,6 +8,12 @@ import java.util.Scanner;
 import controller.ControladoraDespesa;
 import model.vo.DespesaVO;
 
+/**
+ * Classe que contém as opções do menu de despesas.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class MenuDespesa {
 
 	Scanner teclado = new Scanner(System.in);
@@ -22,30 +28,30 @@ public class MenuDespesa {
 	private static final int OPCAO_MENU_CONSULTAR_TODAS_DESPESAS = 1;
 	private static final int OPCAO_MENU_CONSULTAR_UMA_DESPESA = 2;
 	private static final int OPCAO_MENU_CONSULTAR_DESPESA_SAIR = 3;
-	
+
 	public void apresentarMenuDespesa() {
 		int opcao = apresentarOpcoesMenu();
 		while (opcao != OPCAO_MENU_DESPESA_SAIR) {
 			switch (opcao) {
-				case OPCAO_MENU_CADASTRAR_DESPESA: {
-					this.cadastrarDespesa();
-					break;
-				}
-				case OPCAO_MENU_CONSULTAR_DESPESA: {
-					this.consultarDespesa();
-					break;
-				}
-				case OPCAO_MENU_ATUALIZAR_DESPESA: {
-					this.atualizarDespesa();
-					break;
-				}
-				case OPCAO_MENU_EXCLUIR_DESPESA: {
-					this.excluirDespesa();
-					break;
-				}
-				default: {
-					System.out.println("\nOpção Inválida");
-				}
+			case OPCAO_MENU_CADASTRAR_DESPESA: {
+				this.cadastrarDespesa();
+				break;
+			}
+			case OPCAO_MENU_CONSULTAR_DESPESA: {
+				this.consultarDespesa();
+				break;
+			}
+			case OPCAO_MENU_ATUALIZAR_DESPESA: {
+				this.atualizarDespesa();
+				break;
+			}
+			case OPCAO_MENU_EXCLUIR_DESPESA: {
+				this.excluirDespesa();
+				break;
+			}
+			default: {
+				System.out.println("\nOpção Inválida");
+			}
 			}
 			opcao = apresentarOpcoesMenu();
 		}
@@ -87,42 +93,42 @@ public class MenuDespesa {
 		ControladoraDespesa controladoraDespesa = new ControladoraDespesa();
 		while (opcao != OPCAO_MENU_CONSULTAR_DESPESA_SAIR) {
 			switch (opcao) {
-				case 1: {
-					opcao = OPCAO_MENU_CONSULTAR_DESPESA_SAIR;
-					DespesaVO despesaVO = new DespesaVO();
-					System.out.print("\nInforme o código do Usuário: ");
-					despesaVO.setIdUsuario(Integer.parseInt(teclado.nextLine()));
-					
-					ArrayList<DespesaVO> listaDespesasVO = controladoraDespesa.consultarTodasDespesasController(despesaVO);
-					System.out.print("\n--------- RESULTADO DA CONSULTA ---------");
-					System.out.printf("\n%3s  %10s  %-30s  %-10s  %-15s  %-15s  %-15s \n", 
-							"ID", "IDUSUARIO", "DESCRIÇÃO", "VALOR", "DATA VENCIMENTO", "DATA PAGAMENTO", "CATEGORIA");
-					for (int i = 0; i < listaDespesasVO.size(); i++) {
-						listaDespesasVO.get(i).imprimir();
-					}
-					break;
+			case 1: {
+				opcao = OPCAO_MENU_CONSULTAR_DESPESA_SAIR;
+				DespesaVO despesaVO = new DespesaVO();
+				System.out.print("\nInforme o código do Usuário: ");
+				despesaVO.setIdUsuario(Integer.parseInt(teclado.nextLine()));
+
+				ArrayList<DespesaVO> listaDespesasVO = controladoraDespesa.consultarTodasDespesasController(despesaVO);
+				System.out.print("\n--------- RESULTADO DA CONSULTA ---------");
+				System.out.printf("\n%3s  %10s  %-30s  %-10s  %-15s  %-15s  %-15s \n", "ID", "IDUSUARIO", "DESCRIÇÃO",
+						"VALOR", "DATA VENCIMENTO", "DATA PAGAMENTO", "CATEGORIA");
+				for (int i = 0; i < listaDespesasVO.size(); i++) {
+					listaDespesasVO.get(i).imprimir();
 				}
-				case 2: {
-					opcao = OPCAO_MENU_CONSULTAR_DESPESA_SAIR;
-					DespesaVO despesaVO = new DespesaVO();
-					System.out.print("\nInforme o código da Despesa: ");
-					despesaVO.setId(Integer.parseInt(teclado.nextLine()));
-	
-					DespesaVO despesa = controladoraDespesa.consultarDespesaoController(despesaVO);
-					System.out.print("\n--------- RESULTADO DA CONSULTA ---------");
-					System.out.printf("\n%3s  %10s  %-30s  %-10s  %-15s  %-15s  %-15s \n", 
-							"ID", "IDUSUARIO", "DESCRIÇÃO", "VALOR", "DATA VENCIMENTO", "DATA PAGAMENTO", "CATEGORIA");
-					despesa.imprimir();
-					break;
-				}
-				default: {
-					System.out.println("\nOpção Inválida");
-					opcao = this.apresentarOpcoesConsulta();
-				}
+				break;
+			}
+			case 2: {
+				opcao = OPCAO_MENU_CONSULTAR_DESPESA_SAIR;
+				DespesaVO despesaVO = new DespesaVO();
+				System.out.print("\nInforme o código da Despesa: ");
+				despesaVO.setId(Integer.parseInt(teclado.nextLine()));
+
+				DespesaVO despesa = controladoraDespesa.consultarDespesaoController(despesaVO);
+				System.out.print("\n--------- RESULTADO DA CONSULTA ---------");
+				System.out.printf("\n%3s  %10s  %-30s  %-10s  %-15s  %-15s  %-15s \n", "ID", "IDUSUARIO", "DESCRIÇÃO",
+						"VALOR", "DATA VENCIMENTO", "DATA PAGAMENTO", "CATEGORIA");
+				despesa.imprimir();
+				break;
+			}
+			default: {
+				System.out.println("\nOpção Inválida");
+				opcao = this.apresentarOpcoesConsulta();
+			}
 			}
 		}
 	}
-	
+
 	private int apresentarOpcoesConsulta() {
 		System.out.println("\nInforme o tipo de consulta a ser realizada");
 		System.out.println(OPCAO_MENU_CONSULTAR_TODAS_DESPESAS + " - Consultar todas as Despesas");
@@ -157,7 +163,7 @@ public class MenuDespesa {
 		DespesaVO despesaVO = new DespesaVO();
 		System.out.print("Digite o código da Despesa: ");
 		despesaVO.setId(Integer.parseInt(teclado.nextLine()));
-		
+
 		ControladoraDespesa controladoraDespesa = new ControladoraDespesa();
 		controladoraDespesa.excluirDespesaController(despesaVO);
 	}

@@ -3,9 +3,14 @@ package controller;
 import java.util.ArrayList;
 
 import model.bo.ReceitaBO;
-import model.vo.DespesaVO;
 import model.vo.ReceitaVO;
 
+/**
+ * Classe que controla as chamadas relacionadas a receitas.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class ControladoraReceita {
 
 	public void cadastrarReceitaController(ReceitaVO receitaVO) {
@@ -22,7 +27,7 @@ public class ControladoraReceita {
 		ReceitaBO receitaBO = new ReceitaBO();
 		receitaBO.atualizarReceitaBO(receitaVO);
 	}
-	
+
 	public ArrayList<ReceitaVO> consultarTodasReceitasController() {
 		ReceitaBO receitaBO = new ReceitaBO();
 		return receitaBO.consultarReceitasBO();
