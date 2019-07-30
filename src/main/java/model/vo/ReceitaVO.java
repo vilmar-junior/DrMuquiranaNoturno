@@ -3,8 +3,14 @@ package model.vo;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
+/**
+ * Classe que entidade para a tabela Receita.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class ReceitaVO extends LancamentoVO {
-	
+
 	DecimalFormat df = new DecimalFormat("0.00");
 	private LocalDate dataReceita;
 
@@ -24,15 +30,10 @@ public class ReceitaVO extends LancamentoVO {
 	public void setDataReceita(LocalDate dataReceita) {
 		this.dataReceita = dataReceita;
 	}
-	
-	public void imprimir() {
-		System.out.printf("%3d  %10d  %-30s  %-10s  %-12s\n", 
-		this.getId(), 
-		this.getIdUsuario(), 
-		this.getDescricao(), 
-		df.format(this.getValor()), 
-		this.getDataReceita()); 
-	}
-	
-}
 
+	public void imprimir() {
+		System.out.printf("%3d  %10d  %-30s  %-10s  %-12s\n", this.getId(), this.getIdUsuario(), this.getDescricao(),
+				df.format(this.getValor()), this.getDataReceita());
+	}
+
+}

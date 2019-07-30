@@ -2,12 +2,15 @@ package view;
 
 import java.util.Scanner;
 
+/**
+ * Classe que contém as opções do menu principal do Dr Muquirana.
+ * 
+ * @author Adriano de Melo
+ *
+ */
 public class Menu {
-	// alteração local
-	// alteração no github novamente
 	Scanner teclado = new Scanner(System.in);
 
-	// teste alterado localmente
 	private static final int OPCAO_MENU_CADASTRO = 1;
 	private static final int OPCAO_MENU_RELATORIO = 2;
 	private static final int OPCAO_MENU_SAIR = 3;

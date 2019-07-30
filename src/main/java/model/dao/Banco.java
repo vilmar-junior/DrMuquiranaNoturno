@@ -56,6 +56,11 @@ import java.sql.Statement;
  * 
  *         FONTE:
  *         {@link https://pt.stackoverflow.com/questions/99620/qual-a-diferen%C3%A7a-entre-o-statement-e-o-preparedstatement}
+ *         ======= Classe responsável pela conexão JDBC com o banco de dados
+ *         escolhido.
+ * 
+ * @author Adriano de Melo
+ *
  */
 public class Banco {
 
