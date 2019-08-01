@@ -8,6 +8,12 @@ package model.vo;
  */
 public class UsuarioVO {
 
+	@Override
+	public String toString() {
+		return "UsuarioVO [idUsuario=" + idUsuario + ", nome=" + nome + ", cpf=" + cpf + ", telefone=" + telefone
+				+ ", login=" + login + ", senha=" + senha + "]";
+	}
+
 	private int idUsuario;
 	private String nome;
 	private String cpf;
@@ -23,6 +29,12 @@ public class UsuarioVO {
 		this.telefone = telefone;
 		this.login = login;
 		this.senha = senha;
+	}
+
+	public UsuarioVO(String nome, String cpf) {
+		super();
+		this.nome = nome;
+		this.cpf = cpf;
 	}
 
 	public UsuarioVO() {
