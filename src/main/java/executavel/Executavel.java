@@ -2,6 +2,10 @@ package executavel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import model.dao.DespesaDAO;
+import model.vo.DespesaVO;
 
 /**
  * Classe principal da aplicação Dr Muquirana.
@@ -17,6 +21,13 @@ public class Executavel {
 //		menu.apresentarMenu();
 
 		mostrarDataAtualFormatada();
+
+		DespesaDAO d = new DespesaDAO();
+		ArrayList<DespesaVO> todas = d.consultarTodos();
+
+		for (DespesaVO desp : todas) {
+			System.out.println(desp.toString());
+		}
 
 	}
 
