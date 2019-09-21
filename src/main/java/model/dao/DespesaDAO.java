@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import model.vo.DespesaVO;
+import model.vo.UsuarioVO;
 
 /**
  * Classe que contém as chamadas SQL para a entidade/tabela Despesa.
@@ -133,28 +134,19 @@ public class DespesaDAO {
 		return despesa;
 	}
 
-	public ArrayList<DespesaVO> consultarTodasDespesasDAO(DespesaVO despesaVO) {
+	public ArrayList<DespesaVO> consultarTodasDespesas() {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
 		ArrayList<DespesaVO> despesasVO = new ArrayList<DespesaVO>();
 
 		String query = "SELECT iddespesa, idUsuario, descricao, valor, dataVencimento, dataPagamento, categoria "
-				+ " FROM despesa WHERE idusuario = " + despesaVO.getIdUsuario();
+				+ " FROM despesa ";
 
 		try {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
-				DespesaVO despesa = new DespesaVO();
-				despesa.setId(Integer.parseInt(resultado.getString(1)));
-				despesa.setIdUsuario(Integer.parseInt(resultado.getString(2)));
-				despesa.setDescricao(resultado.getString(3));
-				despesa.setValor(Double.parseDouble(resultado.getString(4)));
-				despesa.setDataVencimento(LocalDate.parse(resultado.getString(5), dataFormatter));
-				if (resultado.getString(6) != null) {
-					despesa.setDataPagamento(LocalDate.parse(resultado.getString(6), dataFormatter));
-				}
-				despesa.setCategoria(resultado.getString(7));
+				DespesaVO despesa = construirDoResultSet(resultado);
 				despesasVO.add(despesa);
 			}
 		} catch (SQLException e) {
@@ -166,6 +158,103 @@ public class DespesaDAO {
 			Banco.closeConnection(conn);
 		}
 		return despesasVO;
+	}
+
+	public ArrayList<DespesaVO> consultarDespesasDoUsuario(int idUsuario) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		ArrayList<DespesaVO> despesasVO = new ArrayList<DespesaVO>();
+
+		String query = "SELECT * FROM despesa WHERE idusuario = " + idUsuario;
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				DespesaVO despesa = construirDoResultSet(resultado);
+				despesasVO.add(despesa);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao executar a Query de Consulta de Despesas de um Usuário.");
+			System.out.println("Erro: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return despesasVO;
+	}
+
+	public ArrayList<DespesaVO> consultarDespesasPorCategoria(String categoriaSelecionada) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		ArrayList<DespesaVO> despesasVO = new ArrayList<DespesaVO>();
+
+		String query = "SELECT * FROM despesa WHERE categoria = '" + categoriaSelecionada + "'";
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				DespesaVO despesa = construirDoResultSet(resultado);
+				despesasVO.add(despesa);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao executar a Query de Consulta de Despesas de um Usuário.");
+			System.out.println("Erro: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return despesasVO;
+	}
+
+	public ArrayList<DespesaVO> consultarDespesasPorUsuarioECategoria(int idUsuario,
+			String categoriaSelecionada) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		ArrayList<DespesaVO> despesasVO = new ArrayList<DespesaVO>();
+
+		String query = "SELECT * FROM despesa "
+				+ "WHERE categoria = '" + categoriaSelecionada + "'"
+				+ "AND idusuario = " + idUsuario;
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				DespesaVO despesa = construirDoResultSet(resultado);
+				despesasVO.add(despesa);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao executar a Query de Consulta de Despesas de um Usuário.");
+			System.out.println("Erro: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return despesasVO;
+	}
+	
+	
+	private DespesaVO construirDoResultSet(ResultSet resultado) {
+		DespesaVO despesa = new DespesaVO();
+		try {
+			despesa.setIdUsuario(Integer.parseInt(resultado.getString(2)));
+			despesa.setDescricao(resultado.getString(3));
+			despesa.setValor(Double.parseDouble(resultado.getString(4)));
+			despesa.setDataVencimento(LocalDate.parse(resultado.getString(5), dataFormatter));
+			if (resultado.getString(6) != null) {
+				despesa.setDataPagamento(LocalDate.parse(resultado.getString(6), dataFormatter));
+			}
+			despesa.setId(Integer.parseInt(resultado.getString(1)));
+			despesa.setCategoria(resultado.getString(7));
+		} catch (NumberFormatException e) {
+			System.out.println("Erro ao formatar valor.");
+		} catch (SQLException e) {
+			System.out.println("Erro ao construir despesa do ResultSet.");
+			System.out.println("Erro: " + e.getMessage());
+		}
+		return despesa;
 	}
 
 }

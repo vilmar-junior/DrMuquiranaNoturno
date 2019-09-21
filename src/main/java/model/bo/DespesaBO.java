@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.dao.DespesaDAO;
 import model.vo.DespesaVO;
+import model.vo.UsuarioVO;
 
 /**
  * Classe responsável pelas Regras de Negócio da despesa.
@@ -53,7 +54,8 @@ public class DespesaBO {
 
 	public ArrayList<DespesaVO> consultarTodasDespesasBO(DespesaVO despesaVO) {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		ArrayList<DespesaVO> despesasVO = despesaDAO.consultarTodasDespesasDAO(despesaVO);
+		//TODO alterar para passar o idUsuario
+		ArrayList<DespesaVO> despesasVO = despesaDAO.consultarTodasDespesas();
 		if (despesasVO.isEmpty()) {
 			System.out.println("\nLista de Despesas está vazia.");
 		}
@@ -69,4 +71,29 @@ public class DespesaBO {
 		return despesa;
 	}
 
+	public ArrayList<DespesaVO> consultarDespesas(UsuarioVO usuarioSelecionado, String categoriaSelecionada) {
+		DespesaDAO despesaDAO = new DespesaDAO();
+		ArrayList<DespesaVO> despesas = new ArrayList<DespesaVO>();
+		
+		boolean temUsuario = (usuarioSelecionado != null);
+		boolean temCategoria = (categoriaSelecionada != null && categoriaSelecionada.isEmpty());
+		
+		if(!temUsuario && !temCategoria) {
+			despesas = despesaDAO.consultarTodasDespesas();
+		}
+		
+		if(temUsuario && !temCategoria) {
+			despesas = despesaDAO.consultarDespesasDoUsuario(usuarioSelecionado.getIdUsuario());
+		}
+		
+		if(!temUsuario && temCategoria) {
+			despesas = despesaDAO.consultarDespesasPorCategoria(categoriaSelecionada);
+		}
+		
+		if(temUsuario && temCategoria) {
+			despesas = despesaDAO.consultarDespesasPorUsuarioECategoria(usuarioSelecionado.getIdUsuario(), categoriaSelecionada);
+		}
+		
+		return despesas;
+	}
 }

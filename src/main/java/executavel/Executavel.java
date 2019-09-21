@@ -1,5 +1,9 @@
 package executavel;
 
+import java.util.ArrayList;
+
+import model.dao.DespesaDAO;
+import model.vo.DespesaVO;
 import view.Menu;
 
 /**
@@ -12,8 +16,16 @@ public class Executavel {
 
 	public static void main(String[] args) {
 
-		Menu menu = new Menu();
-		menu.apresentarMenu();
+		DespesaDAO dao = new DespesaDAO();
+		ArrayList<DespesaVO> todasAsDespesas = dao.consultarTodasDespesas();
+		
+		System.out.println("ID        IDUSUARIO    DESC                        VALOR         DTDESP        DTPGTO           CATEGORIA");
+		for(DespesaVO desp: todasAsDespesas) {
+			desp.imprimir();
+		}
+		
+		//Menu menu = new Menu();
+		//menu.apresentarMenu();
 
 //		HashMap<String, UsuarioVO> mapUsuarios = new HashMap<String, UsuarioVO>();
 //		UsuarioVO joao = new UsuarioVO("João", "111");
