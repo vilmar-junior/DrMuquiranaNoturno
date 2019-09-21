@@ -1,6 +1,8 @@
 package model.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,22 +17,32 @@ import model.vo.UsuarioVO;
  * Classe que contém as chamadas SQL para a entidade/tabela Despesa.
  * 
  * @author Adriano de Melo
+ * 
+ *         Vilmar César Pereira Júnior
  *
  */
-public class DespesaDAO {
+public class DespesaDAO implements BaseDAO<DespesaVO> {
 
 	DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public int cadastrarDespesaDAO(DespesaVO despesaVO) {
+	public DespesaVO salvar(DespesaVO despesaVO) {
 		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
-		int resultado = 0;
-		String query = "INSERT INTO despesa (idUsuario, descricao, valor, dataVencimento, dataPagamento, categoria) VALUES ("
-				+ despesaVO.getIdUsuario() + ", '" + despesaVO.getDescricao() + "', " + despesaVO.getValor() + ", '"
-				+ despesaVO.getDataVencimento() + "', '" + despesaVO.getDataPagamento() + "', '"
-				+ despesaVO.getCategoria() + "')";
+		String sql = "INSERT INTO despesa (idUsuario, descricao, valor, dataVencimento, dataPagamento, categoria) "
+				+ " VALUES (?,?,?,?,?,?) ";
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql, Statement.RETURN_GENERATED_KEYS);
+
 		try {
-			resultado = stmt.executeUpdate(query);
+			stmt.setInt(1, despesaVO.getIdUsuario());
+			stmt.setString(2, despesaVO.getDescricao());
+			stmt.setDouble(3, despesaVO.getValor());
+			stmt.setDate(4, Date.valueOf(despesaVO.getDataVencimento()));
+			stmt.setDate(5, Date.valueOf(despesaVO.getDataPagamento()));
+			stmt.setString(6, despesaVO.getCategoria());
+			stmt.execute();
+			ResultSet generatedKeys = stmt.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				despesaVO.setIdUsuario(generatedKeys.getInt(1));
+			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao executar a Query de Cadastro da Despesa.");
 			System.out.println("Erro: " + e.getMessage());
@@ -38,7 +50,7 @@ public class DespesaDAO {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
-		return resultado;
+		return despesaVO;
 	}
 
 	public boolean existeRegistroPorIdDespesa(int id) {
@@ -63,11 +75,11 @@ public class DespesaDAO {
 		return false;
 	}
 
-	public int excluirDespesaDAO(DespesaVO despesaVO) {
+	public boolean excluir(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
-		String query = "DELETE FROM despesa WHERE iddespesa = " + despesaVO.getId();
+		String query = "DELETE FROM despesa WHERE iddespesa = " + id;
 		try {
 			resultado = stmt.executeUpdate(query);
 		} catch (SQLException e) {
@@ -77,10 +89,10 @@ public class DespesaDAO {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
-		return resultado;
+		return resultado > 0;
 	}
 
-	public int atualizarDespesaDAO(DespesaVO despesaVO) {
+	public boolean alterar(DespesaVO despesaVO) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
@@ -98,17 +110,17 @@ public class DespesaDAO {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
-		return resultado;
+		return resultado > 0;
 	}
 
-	public DespesaVO consultarDespesaDAO(DespesaVO despesaVO) {
+	public DespesaVO consultarPorId(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
 		DespesaVO despesa = new DespesaVO();
 
 		String query = "SELECT iddespesa, idUsuario, descricao, valor, dataVencimento, dataPagamento, categoria "
-				+ " FROM despesa WHERE iddespesa = " + despesaVO.getId();
+				+ " FROM despesa WHERE iddespesa = " + id;
 
 		try {
 			resultado = stmt.executeQuery(query);
@@ -134,7 +146,7 @@ public class DespesaDAO {
 		return despesa;
 	}
 
-	public ArrayList<DespesaVO> consultarTodasDespesas() {
+	public ArrayList<DespesaVO> consultarTodos() {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
@@ -142,15 +154,23 @@ public class DespesaDAO {
 
 		String query = "SELECT iddespesa, idUsuario, descricao, valor, dataVencimento, dataPagamento, categoria "
 				+ " FROM despesa ";
-
 		try {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
-				DespesaVO despesa = construirDoResultSet(resultado);
+				DespesaVO despesa = new DespesaVO();
+				despesa.setId(Integer.parseInt(resultado.getString(1)));
+				despesa.setIdUsuario(Integer.parseInt(resultado.getString(2)));
+				despesa.setDescricao(resultado.getString(3));
+				despesa.setValor(Double.parseDouble(resultado.getString(4)));
+				despesa.setDataVencimento(LocalDate.parse(resultado.getString(5), dataFormatter));
+				if (resultado.getString(6) != null) {
+					despesa.setDataPagamento(LocalDate.parse(resultado.getString(6), dataFormatter));
+				}
+				despesa.setCategoria(resultado.getString(7));
 				despesasVO.add(despesa);
 			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao executar a Query de Consulta de Despesas de um Usuário.");
+			System.out.println("Erro ao executar ao consultar TODAS as Despesas");
 			System.out.println("Erro: " + e.getMessage());
 		} finally {
 			Banco.closeResultSet(resultado);
@@ -160,6 +180,12 @@ public class DespesaDAO {
 		return despesasVO;
 	}
 
+	/**
+	 * Consulta todas as despesas de um determinado usuário
+	 * 
+	 * @param idUsuario a chave primária do usuário que possui as despesas
+	 * @return uma lista de despesas.
+	 */
 	public ArrayList<DespesaVO> consultarDespesasDoUsuario(int idUsuario) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
