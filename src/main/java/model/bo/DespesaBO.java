@@ -73,7 +73,7 @@ public class DespesaBO {
 		ArrayList<DespesaVO> despesas = new ArrayList<DespesaVO>();
 		
 		boolean temUsuario = (usuarioSelecionado != null);
-		boolean temCategoria = (categoriaSelecionada != null && categoriaSelecionada.isEmpty());
+		boolean temCategoria = (categoriaSelecionada != null && !categoriaSelecionada.isEmpty());
 		
 		if(!temUsuario && !temCategoria) {
 			despesas = despesaDAO.consultarTodos();

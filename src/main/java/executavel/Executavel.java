@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import model.dao.DespesaDAO;
 import model.vo.DespesaVO;
+import view.Menu;
 
 /**
  * Classe principal da aplicação Dr Muquirana.
@@ -16,29 +17,8 @@ import model.vo.DespesaVO;
 public class Executavel {
 
 	public static void main(String[] args) {
-
-		DespesaDAO dao = new DespesaDAO();
-		ArrayList<DespesaVO> todasAsDespesas = dao.consultarTodos();
-		
-		System.out.println("ID        IDUSUARIO    DESC                        VALOR         DTDESP        DTPGTO           CATEGORIA");
-		for(DespesaVO desp: todasAsDespesas) {
-			desp.imprimir();
-		}
-		
-		//Menu menu = new Menu();
-		//menu.apresentarMenu();
-//		Menu menu = new Menu();
-//		menu.apresentarMenu();
-
-		mostrarDataAtualFormatada();
-
-		DespesaDAO d = new DespesaDAO();
-		ArrayList<DespesaVO> todas = d.consultarTodos();
-
-		for (DespesaVO desp : todas) {
-			System.out.println(desp.toString());
-		}
-
+		Menu menu = new Menu();
+		menu.apresentarMenu();
 	}
 
 	public static void mostrarDataAtualFormatada() {

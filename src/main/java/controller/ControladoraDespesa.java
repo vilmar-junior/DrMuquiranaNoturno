@@ -44,4 +44,9 @@ public class ControladoraDespesa {
 		DespesaBO despesaBO = new DespesaBO();
 		return despesaBO.consultarDespesaBO(despesaVO);
 	}
+
+	public ArrayList<String> consultarCategorias() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
