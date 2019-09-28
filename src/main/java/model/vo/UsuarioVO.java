@@ -10,8 +10,7 @@ public class UsuarioVO {
 
 	@Override
 	public String toString() {
-		return "UsuarioVO [idUsuario=" + idUsuario + ", nome=" + nome + ", cpf=" + cpf + ", telefone=" + telefone
-				+ ", login=" + login + ", senha=" + senha + "]";
+		return this.nome;
 	}
 
 	private int idUsuario;

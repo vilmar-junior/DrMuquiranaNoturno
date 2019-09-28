@@ -3,6 +3,7 @@ package model.bo;
 import java.util.ArrayList;
 
 import model.dao.DespesaDAO;
+import model.seletor.DespesaSeletor;
 import model.vo.DespesaVO;
 import model.vo.UsuarioVO;
 
@@ -92,5 +93,15 @@ public class DespesaBO {
 		}
 		
 		return despesas;
+	}
+
+	public ArrayList<String> consultarCategorias() {
+		DespesaDAO despesaDAO = new DespesaDAO();
+		return despesaDAO.consultarCategorias();
+	}
+
+	public ArrayList<DespesaVO> consultarDespesas(DespesaSeletor seletor) {
+		DespesaDAO despesaDAO = new DespesaDAO();
+		return despesaDAO.consultarDespesas(seletor);
 	}
 }

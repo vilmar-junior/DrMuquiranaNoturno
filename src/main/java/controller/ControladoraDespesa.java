@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import model.bo.DespesaBO;
+import model.seletor.DespesaSeletor;
 import model.vo.DespesaVO;
 import model.vo.UsuarioVO;
 
@@ -46,7 +47,12 @@ public class ControladoraDespesa {
 	}
 
 	public ArrayList<String> consultarCategorias() {
-		// TODO Auto-generated method stub
-		return null;
+		DespesaBO despesaBO = new DespesaBO();
+		return despesaBO.consultarCategorias();
+	}
+
+	public ArrayList<DespesaVO> consultarDespesas(DespesaSeletor seletor) {
+		DespesaBO despesaBO = new DespesaBO();
+		return despesaBO.consultarDespesas(seletor);
 	}
 }

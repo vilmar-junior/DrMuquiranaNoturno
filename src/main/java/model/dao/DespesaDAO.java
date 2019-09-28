@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import model.seletor.DespesaSeletor;
 import model.vo.DespesaVO;
 import model.vo.UsuarioVO;
 
@@ -283,4 +284,91 @@ public class DespesaDAO implements BaseDAO<DespesaVO> {
 		return despesa;
 	}
 
+	public ArrayList<String> consultarCategorias() {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		ArrayList<String> categoriasSemRepeticao = new ArrayList<String>();
+
+		String query = "SELECT distinct(categoria) FROM despesa ";
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				categoriasSemRepeticao.add(resultado.getString(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao executar a Query de Consulta de categorias.");
+			System.out.println("Erro: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return categoriasSemRepeticao;
+	}
+
+	public ArrayList<DespesaVO> consultarDespesas(DespesaSeletor seletor) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		ArrayList<DespesaVO> despesasVO = new ArrayList<DespesaVO>();
+
+		String query = "SELECT * FROM despesa d";
+		
+		if (seletor.temFiltro()) {
+			query = criarFiltros(seletor, query);
+		}
+
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				DespesaVO despesa = construirDoResultSet(resultado);
+				despesasVO.add(despesa);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao executar a Query de Consulta de Despesas de um Usuário.");
+			System.out.println("Erro: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return despesasVO;
+	}
+	
+	/**
+	 * Cria os filtros de consulta (cláusulas WHERE/AND) de acordo com o que foi
+	 * preeenchido no seletor.
+	 * 
+	 * ATENÇÃO: a ordem de criação dos filtros e posterior preenchimentos é
+	 * relevante, logo este método é intimamente ligado ao método
+	 * preencherParametrosConsulta
+	 * 
+	 * @param seletor o seletor de produtos
+	 * @param jpql    a consulta que será preenchida
+	 */
+	private String criarFiltros(DespesaSeletor seletor, String sql) {
+
+		// Tem pelo menos UM filtro
+		sql += " WHERE ";
+		boolean primeiro = true;
+
+		if (seletor.getUsuario() != null) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "d.idusuario = " + seletor.getUsuario().getIdUsuario();
+			primeiro = false;
+		}
+
+		if ((seletor.getCategoria() != null) && (seletor.getCategoria().trim().length() > 0)) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "d.categoria LIKE '%" + seletor.getCategoria() + "%'";
+			primeiro = false;
+		}
+
+		return sql;
+	}
 }
