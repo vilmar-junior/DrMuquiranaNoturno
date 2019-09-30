@@ -21,6 +21,7 @@ import controller.ControladoraUsuario;
 import model.seletor.DespesaSeletor;
 import model.vo.DespesaVO;
 import model.vo.UsuarioVO;
+import javax.swing.SwingConstants;
 
 public class PainelListagemDespesas extends JPanel {
 
@@ -86,65 +87,104 @@ public class PainelListagemDespesas extends JPanel {
 
 		btnExcluir = new JButton("Excluir");
 		btnExcluir.setEnabled(false);
+		
+		JButton btnVoltarPagina = new JButton("<<");
+		
+		JButton btnAvancarPagina = new JButton(">>");
+		
+		JLabel lblPgina = new JLabel("Página");
+		
+		JLabel lblPaginaAtual = new JLabel("10");
+		lblPaginaAtual.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		JLabel label = new JLabel("/");
+		
+		JLabel lblTotalPaginas = new JLabel("500");
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-				groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(255)
-						.addComponent(lblDespesas)
-						.addContainerGap(280, Short.MAX_VALUE))
+					.addGap(255)
+					.addComponent(lblDespesas)
+					.addContainerGap(280, Short.MAX_VALUE))
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(200)
-						.addComponent(btnConsultar, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-						.addGap(34)
-						.addComponent(btnLimpar, GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-						.addGap(209))
+					.addGap(200)
+					.addComponent(btnConsultar, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+					.addGap(34)
+					.addComponent(btnLimpar, GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+					.addGap(209))
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(141)
-						.addComponent(btnNovaDespesa, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-						.addGap(18)
-						.addComponent(btnEditar, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-						.addGap(27)
-						.addComponent(btnExcluir, GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
-						.addGap(125))
+					.addGap(39)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(tblDespesas, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblUsuario)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cbUsuarios, 0, 194, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblCategoria)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(cbCategorias, 0, 222, Short.MAX_VALUE)))
+					.addGap(29))
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(39)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lblUsuario)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(cbUsuarios, 0, 194, Short.MAX_VALUE)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(lblCategoria)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(cbCategorias, 0, 222, Short.MAX_VALUE))
-								.addComponent(tblDespesas, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE))
-						.addGap(29))
-				);
+					.addGap(141)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnVoltarPagina, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+						.addComponent(btnNovaDespesa, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnEditar, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+							.addGap(27))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblPgina, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblPaginaAtual, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(label)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblTotalPaginas)
+							.addGap(8)))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnExcluir, GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+							.addGap(125))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(btnAvancarPagina, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
+		);
 		groupLayout.setVerticalGroup(
-				groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(27)
-						.addComponent(lblDespesas)
-						.addGap(18)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblUsuario)
-								.addComponent(cbUsuarios, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(cbCategorias, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblCategoria))
-						.addGap(18)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnConsultar)
-								.addComponent(btnLimpar))
-						.addGap(18)
-						.addComponent(tblDespesas, GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-						.addGap(18)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnNovaDespesa)
-								.addComponent(btnEditar)
-								.addComponent(btnExcluir))
-						.addContainerGap())
-				);
+					.addGap(27)
+					.addComponent(lblDespesas)
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblUsuario)
+						.addComponent(cbUsuarios, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cbCategorias, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblCategoria))
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnConsultar)
+						.addComponent(btnLimpar))
+					.addGap(18)
+					.addComponent(tblDespesas, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnVoltarPagina)
+						.addComponent(btnAvancarPagina)
+						.addComponent(lblPgina)
+						.addComponent(label)
+						.addComponent(lblTotalPaginas)
+						.addComponent(lblPaginaAtual))
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnNovaDespesa)
+						.addComponent(btnEditar)
+						.addComponent(btnExcluir))
+					.addContainerGap())
+		);
 		setLayout(groupLayout);
 
 	}

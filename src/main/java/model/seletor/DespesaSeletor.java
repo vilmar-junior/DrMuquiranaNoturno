@@ -67,4 +67,20 @@ public class DespesaSeletor {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
+
+	public int getLimite() {
+		return limite;
+	}
+
+	public void setLimite(int limite) {
+		this.limite = limite;
+	}
+
+	public int getPagina() {
+		return pagina;
+	}
+
+	public void setPagina(int pagina) {
+		this.pagina = pagina;
+	}
 }

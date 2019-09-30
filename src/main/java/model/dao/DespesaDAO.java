@@ -318,6 +318,10 @@ public class DespesaDAO implements BaseDAO<DespesaVO> {
 		if (seletor.temFiltro()) {
 			query = criarFiltros(seletor, query);
 		}
+		
+		if(seletor.temPaginacao()) {
+			query += " LIMIT " + seletor.getLimite() + " OFFSET " + seletor.getOffset();
+		}
 
 		try {
 			resultado = stmt.executeQuery(query);
