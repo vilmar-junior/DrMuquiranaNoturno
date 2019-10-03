@@ -340,6 +340,35 @@ public class DespesaDAO implements BaseDAO<DespesaVO> {
 		return despesasVO;
 	}
 	
+	public int consultarTotalDespesas(DespesaSeletor seletor) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		ArrayList<DespesaVO> despesasVO = new ArrayList<DespesaVO>();
+
+		String query = "SELECT count(*) FROM despesa d";
+		
+		if (seletor.temFiltro()) {
+			query = criarFiltros(seletor, query);
+		}
+		
+		int totalDespesas = 0;
+		try {
+			resultado = stmt.executeQuery(query);
+			if (resultado.next()) {
+				totalDespesas = resultado.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao executar a Query de Consulta de total de despesas de um usuário.");
+			System.out.println("Erro: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return totalDespesas;
+	}
+	
 	/**
 	 * Cria os filtros de consulta (cláusulas WHERE/AND) de acordo com o que foi
 	 * preeenchido no seletor.
@@ -374,5 +403,18 @@ public class DespesaDAO implements BaseDAO<DespesaVO> {
 		}
 
 		return sql;
+	}
+
+	public int consultarTotalPaginas(DespesaSeletor seletor) {
+		int totalDespesas = this.consultarTotalDespesas(seletor);
+		
+		int totalPaginas = totalDespesas / seletor.getLimite();
+		int resto = totalDespesas % seletor.getLimite();
+		
+		if(resto > 0) {
+			totalPaginas++;
+		}
+		
+		return totalPaginas;
 	}
 }

@@ -1,5 +1,6 @@
 package view.despesa;
 
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +12,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -38,6 +40,16 @@ public class PainelListagemDespesas extends JPanel {
 	private JButton btnExcluir;
 	private String[] nomesColunas = {"#", "Id Usuário", "Categoria", "Data Vencimento", "Data Pagamento"};
 	private DateTimeFormatter formatadorDeData = DateTimeFormatter.ofPattern("dd-MM-yy");
+	private int paginaAtual = 1;
+	private JLabel lblPaginaAtual;
+	private JLabel lblTotalPaginas;
+	private int totalPaginas;
+
+	private JButton btnVoltarPagina;
+
+	private JButton btnAvancarPagina;
+	
+	private static final int LIMITE_REGISTROS_CONSULTA_DESPESAS = 15;
 
 	/**
 	 * Create the panel.
@@ -64,14 +76,7 @@ public class PainelListagemDespesas extends JPanel {
 		btnConsultar = new JButton("Consultar");
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				DespesaSeletor seletor = new DespesaSeletor();
-				seletor.setUsuario((UsuarioVO)cbUsuarios.getSelectedItem());
-				seletor.setCategoria((String)cbCategorias.getSelectedItem());
-
-				ControladoraDespesa controller = new ControladoraDespesa();
-				ArrayList<DespesaVO> despesas = controller.consultarDespesas(seletor);
-
-				atualizarTabelaDespesas(despesas);
+				consultarDespesas();
 			}
 		});
 		btnLimpar = new JButton("Limpar");
@@ -81,6 +86,10 @@ public class PainelListagemDespesas extends JPanel {
 			}
 		});
 		btnNovaDespesa = new JButton("Nova despesa");
+		btnNovaDespesa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 
 		btnEditar = new JButton("Editar");
 		btnEditar.setEnabled(false);
@@ -88,18 +97,38 @@ public class PainelListagemDespesas extends JPanel {
 		btnExcluir = new JButton("Excluir");
 		btnExcluir.setEnabled(false);
 		
-		JButton btnVoltarPagina = new JButton("<<");
+		btnVoltarPagina = new JButton("<<");
+		btnVoltarPagina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(paginaAtual > 1) {
+					paginaAtual--;
+					lblPaginaAtual.setText(paginaAtual + "");
+					consultarDespesas();
+				}
+			}
+		});
+		btnVoltarPagina.setEnabled(false);
 		
-		JButton btnAvancarPagina = new JButton(">>");
+		btnAvancarPagina = new JButton(">>");
+		btnAvancarPagina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(paginaAtual < totalPaginas) {
+					paginaAtual++;
+					lblPaginaAtual.setText(paginaAtual + "");
+					consultarDespesas();
+				}
+			}
+		});
 		
-		JLabel lblPgina = new JLabel("Página");
+		verificarBotoesPaginas();
+		JLabel lblPagina = new JLabel("Página");
 		
-		JLabel lblPaginaAtual = new JLabel("10");
+		lblPaginaAtual = new JLabel("1");
 		lblPaginaAtual.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-		JLabel label = new JLabel("/");
+		JLabel labelBarra = new JLabel("/");
 		
-		JLabel lblTotalPaginas = new JLabel("500");
+		lblTotalPaginas = new JLabel("");
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -127,31 +156,30 @@ public class PainelListagemDespesas extends JPanel {
 							.addComponent(cbCategorias, 0, 222, Short.MAX_VALUE)))
 					.addGap(29))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(141)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnVoltarPagina, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-						.addComponent(btnNovaDespesa, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
-					.addGap(18)
+					.addGap(80)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(btnVoltarPagina, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnNovaDespesa, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnEditar, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+							.addGap(18)
+							.addComponent(btnEditar, GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
 							.addGap(27))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblPgina, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+							.addGap(35)
+							.addComponent(lblPagina, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(lblPaginaAtual, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(label)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(labelBarra, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(lblTotalPaginas)
-							.addGap(8)))
+							.addGap(50)))
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnExcluir, GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-							.addGap(125))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnAvancarPagina, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())))
+						.addComponent(btnAvancarPagina, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+						.addComponent(btnExcluir, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+					.addGap(50))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -173,20 +201,42 @@ public class PainelListagemDespesas extends JPanel {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnVoltarPagina)
-						.addComponent(btnAvancarPagina)
-						.addComponent(lblPgina)
-						.addComponent(label)
+						.addComponent(lblPagina)
 						.addComponent(lblTotalPaginas)
-						.addComponent(lblPaginaAtual))
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(lblPaginaAtual)
+						.addComponent(labelBarra)
+						.addComponent(btnAvancarPagina))
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNovaDespesa)
 						.addComponent(btnEditar)
 						.addComponent(btnExcluir))
-					.addContainerGap())
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 
+	}
+
+	protected void verificarBotoesPaginas() {
+		this.btnVoltarPagina.setEnabled(paginaAtual > 1);
+		this.btnAvancarPagina.setEnabled(paginaAtual < totalPaginas);
+	}
+
+	protected void consultarDespesas() {
+		DespesaSeletor seletor = new DespesaSeletor();
+		seletor.setUsuario((UsuarioVO)cbUsuarios.getSelectedItem());
+		seletor.setCategoria((String)cbCategorias.getSelectedItem());
+		seletor.setPagina(paginaAtual);
+		seletor.setLimite(LIMITE_REGISTROS_CONSULTA_DESPESAS);
+
+		ControladoraDespesa controller = new ControladoraDespesa();
+		ArrayList<DespesaVO> despesas = controller.consultarDespesas(seletor);
+	
+		totalPaginas = controller.consultarTotalPaginas(seletor);
+		lblTotalPaginas.setText(totalPaginas + "");
+		
+		atualizarTabelaDespesas(despesas);
+		verificarBotoesPaginas();
 	}
 
 	private void limparCamposConsulta() {
@@ -204,7 +254,6 @@ public class PainelListagemDespesas extends JPanel {
 
 		DefaultTableModel modeloTabelaDespesas = (DefaultTableModel) tblDespesas.getModel();
 		for(DespesaVO desp: despesas) {
-			//"#", "Id Usuário", "Categoria", "Data Vencimento", "Data Pagamento"
 			String[] novaLinha = new String[5];
 			novaLinha[0] = desp.getId() + "";
 			novaLinha[1] = desp.getIdUsuario() + "";
@@ -217,5 +266,9 @@ public class PainelListagemDespesas extends JPanel {
 
 			modeloTabelaDespesas.addRow(novaLinha);
 		}
+	}
+
+	public JButton getBtnNovaDespesa() {
+		return btnNovaDespesa;
 	}
 }

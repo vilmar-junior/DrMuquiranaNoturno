@@ -104,4 +104,9 @@ public class DespesaBO {
 		DespesaDAO despesaDAO = new DespesaDAO();
 		return despesaDAO.consultarDespesas(seletor);
 	}
+
+	public int consultarTotalPaginas(DespesaSeletor seletor) {
+		DespesaDAO despesaDAO = new DespesaDAO();
+		return despesaDAO.consultarTotalPaginas(seletor);
+	}
 }

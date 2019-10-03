@@ -55,4 +55,9 @@ public class ControladoraDespesa {
 		DespesaBO despesaBO = new DespesaBO();
 		return despesaBO.consultarDespesas(seletor);
 	}
+
+	public int consultarTotalPaginas(DespesaSeletor seletor) {
+		DespesaBO despesaBO = new DespesaBO();
+		return despesaBO.consultarTotalPaginas(seletor);
+	}
 }
