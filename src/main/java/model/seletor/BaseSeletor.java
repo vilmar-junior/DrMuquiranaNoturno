@@ -1,5 +1,11 @@
 package model.seletor;
 
+/**
+ * @author Vilmar César Pereira Júnior
+ * 
+ * Classe abstrata que serve de base para TODOS os seletores criados.
+ *
+ */
 public abstract class BaseSeletor {
 
 	//Atributos para possível paginação dos resultados (intervalo)
