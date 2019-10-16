@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,16 +37,27 @@ public class GeradorPlanilha {
 
 		// Criar o cabeçalho (header)
 		String[] nomesColunas = { "#", "Nome", "Valor", "Peso (kg)", "Data de cadastro" };
-		criarCabecalho(nomesColunas, aba, linhaAtual);
-
+		criarCabecalho(nomesColunas, aba, linhaAtual++);
+		
 		// Preencher as linhas com os produtos
 		criarLinhasProdutos(produtos, aba, linhaAtual);
+		
+		ajustarLarguraColunas(aba, nomesColunas.length);
 
 		// Salvar o arquivo gerado no disco
 		return salvarNoDisco(planilha, caminhoArquivo, ".xlsx");
 	}
 
+	private void ajustarLarguraColunas(XSSFSheet aba, int quantidadeColunas) {
+		for (int i = 0; i < quantidadeColunas; i++) {
+			aba.autoSizeColumn(i);
+		}
+		
+	}
+
 	private void criarLinhasProdutos(List<Produto> produtos, XSSFSheet aba, int posicaoLinhaAtual) {
+		
+		DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		for (Produto p : produtos) {
 			// criar uma nova linha na planilha
 			XSSFRow linhaAtual = aba.createRow(posicaoLinhaAtual);
@@ -54,10 +67,8 @@ public class GeradorPlanilha {
 			linhaAtual.createCell(1).setCellValue(p.getNome());
 			linhaAtual.createCell(2).setCellValue(p.getValor());
 			linhaAtual.createCell(3).setCellValue(p.getPeso());
-
-			// Converter para Date
-			// linhaAtual.createCell(4).setCellValue(new Date(p.get));
-
+			linhaAtual.createCell(4).setCellValue(p.getDataCadastro().format(formatadorData));
+			
 			posicaoLinhaAtual++;
 		}
 
